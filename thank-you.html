@@ -11,11 +11,12 @@
             background-color: #f0f0f0;
             color: #333;
             text-align: center;
-            padding: 50px;
+            padding: 20px;
+            margin: 0;
         }
         h1 {
             color: #2c3e50;
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin-bottom: 20px;
         }
         p {
@@ -44,6 +45,17 @@
         button:hover {
             background-color: #2980b9;
         }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            .event-info {
+                font-size: 1rem;
+            }
+            button {
+                padding: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -64,16 +76,14 @@
             const location = encodeURIComponent('Rua Estrela Dalva - 314 - Alvorada - Vila Velha/ES');
             const details = encodeURIComponent('Aniversário em 12/10/2024 às 12:30h');
             const startDate = '20241012T123000';
-            const endDate = '20241012T153000'; // Supondo que o evento dure 3 horas
+            const endDate = '20241012T153000'; 
 
             const isApple = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
             if (isApple) {
-                // iOS/Apple Calendar
                 const appleCalendarUrl = `data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0AURL:${document.URL}%0ADTSTART:${startDate}%0ADTEND:${endDate}%0ASUMMARY:${title}%0ADESCRIPTION:${details}%0ALOCATION:${location}%0AEND:VEVENT%0AEND:VCALENDAR`;
                 window.open(appleCalendarUrl, '_blank');
             } else {
-                // Google Calendar
                 const googleCalendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}&sf=true&output=xml`;
                 window.open(googleCalendarUrl, '_blank');
             }
