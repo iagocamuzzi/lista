@@ -120,7 +120,7 @@
                     const data = childSnapshot.val();
                     totalPeople++;
 
-                    const name = data.name;
+                    const name = data.name.toUpperCase();
                     guestArray.push(name);
 
                     const timestamp = data.timestamp ? new Date(data.timestamp) : null;
@@ -142,7 +142,7 @@
 
             window.sendListToWhatsApp = function() {
                 const phoneNumber = "+5527997715210";
-                let message = guestArray.map((name, index) => `${index + 1} - ${name}`).join('%0A');
+                let message = `*CONFIRMAÇÃO - SITE*%0A%0A` + guestArray.map((name, index) => `${index + 1} - ${name}`).join('%0A');
 
                 const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
                 window.open(whatsappUrl, '_blank');
