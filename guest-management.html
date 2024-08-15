@@ -105,9 +105,13 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
+        function updateTotalPeople(count) {
+            const totalElement = document.getElementById('total');
+            totalElement.innerHTML = `Total de Pessoas Confirmadas: ${count}`;
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const confirmationList = document.getElementById('confirmationList');
-            const totalElement = document.getElementById('total');
             let totalPeople = 0;
 
             onValue(ref(database, 'confirmations'), (snapshot) => {
@@ -119,6 +123,8 @@
                     const key = childSnapshot.key;
                     const name = data.name.toUpperCase();
                     const guest = data.guest.toUpperCase();
+
+                    totalPeople++; // Contar a pessoa principal
 
                     const timestamp = data.timestamp ? new Date(data.timestamp) : null;
                     const formattedDate = timestamp 
@@ -134,7 +140,7 @@
                     confirmationList.appendChild(row);
                 });
 
-                totalElement.innerHTML = `Total de Pessoas Confirmadas: ${totalPeople}`;
+                updateTotalPeople(totalPeople);
 
                 document.querySelectorAll('input[type="text"]').forEach(input => {
                     input.addEventListener('blur', function() {
@@ -149,6 +155,8 @@
                             if (siblingInput && siblingInput.value.trim() === '') {
                                 remove(ref(database, `confirmations/${key}`)).then(() => {
                                     this.closest('tr').remove(); // Remove a linha da tabela
+                                    totalPeople--; // Atualizar o total de pessoas
+                                    updateTotalPeople(totalPeople); // Atualizar a exibição do total
                                 }).catch(error => {
                                     console.error("Erro ao excluir: ", error);
                                 });
