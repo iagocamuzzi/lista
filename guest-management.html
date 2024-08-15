@@ -70,6 +70,24 @@
             text-transform: uppercase;
         }
     </style>
+</head>
+<body>
+    <h1>Gerenciamento de Convidados</h1>
+    <div id="total">Carregando...</div>
+    <button id="printBtn" onclick="printList()">Imprimir Lista de Convidados</button>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Acompanhante</th>
+                <th>Data e Hora da Confirmação</th>
+            </tr>
+        </thead>
+        <tbody id="confirmationList">
+            <!-- Convidados confirmados aparecerão aqui -->
+        </tbody>
+    </table>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
         import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-database.js";
@@ -154,26 +172,10 @@
             });
         });
 
-        function printList() {
+        // Definir a função printList no escopo global
+        window.printList = function() {
             window.print();
         }
     </script>
-</head>
-<body>
-    <h1>Gerenciamento de Convidados</h1>
-    <div id="total">Carregando...</div>
-    <button id="printBtn" onclick="printList()">Imprimir Lista de Convidados</button>
-    <table>
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Acompanhante</th>
-                <th>Data e Hora da Confirmação</th>
-            </tr>
-        </thead>
-        <tbody id="confirmationList">
-            <!-- Convidados confirmados aparecerão aqui -->
-        </tbody>
-    </table>
 </body>
 </html>
