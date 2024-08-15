@@ -55,13 +55,6 @@
         button:hover {
             background-color: #2980b9;
         }
-        #map {
-            width: 100%;
-            height: 300px;
-            margin-top: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
     </style>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
@@ -108,21 +101,7 @@
                 });
             });
         });
-
-        // Função para inicializar o mapa
-        function initMap() {
-            const eventLocation = { lat: -23.55052, lng: -46.633308 }; // Exemplo de coordenadas (São Paulo, Brasil)
-            const map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 15,
-                center: eventLocation,
-            });
-            const marker = new google.maps.Marker({
-                position: eventLocation,
-                map: map,
-            });
-        }
     </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
 </head>
 <body>
     <h1>Confirme sua Presença no Aniversário!</h1>
@@ -137,8 +116,5 @@
 
         <button type="submit">Confirmar Presença</button>
     </form>
-
-    <h2>Localização do Evento</h2>
-    <div id="map"></div>
 </body>
 </html>
