@@ -11,15 +11,16 @@
             background-color: #f0f0f0;
             color: #333;
             text-align: center;
-            padding: 50px;
+            padding: 20px;
+            margin: 0;
         }
         h1 {
             color: #2c3e50;
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin-bottom: 20px;
         }
         form {
-            max-width: 500px;
+            max-width: 400px;
             margin: 0 auto;
             background-color: white;
             padding: 20px;
@@ -35,33 +36,45 @@
         input {
             width: 100%;
             padding: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border-radius: 5px;
             border: 1px solid #ccc;
             font-size: 1rem;
             text-transform: uppercase;
         }
         button {
+            width: 100%;
             background-color: #3498db;
             color: white;
-            padding: 15px 30px;
+            padding: 15px;
             border: none;
             border-radius: 5px;
             font-size: 1rem;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            margin-bottom: 20px;
         }
         button:hover {
             background-color: #2980b9;
         }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            form {
+                padding: 15px;
+            }
+            input {
+                padding: 8px;
+            }
+            button {
+                padding: 12px;
+            }
+        }
     </style>
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
         import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-database.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBVauuiyVT2bPoVpM5QtDAd2XNN9-4FQeI",
             authDomain: "listaconfirmacao-da672.firebaseapp.com",
@@ -71,7 +84,6 @@
             appId: "1:289041048573:web:83f4bf7ae29aa1eee3ef94"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
@@ -80,11 +92,11 @@
             const guestField = document.getElementById('guest');
             const enableGuestButton = document.getElementById('enableGuestButton');
 
-            guestField.disabled = true; // Campo de acompanhante desabilitado por padrão
+            guestField.disabled = true;
 
             enableGuestButton.addEventListener('click', function() {
-                guestField.disabled = false; // Habilitar o campo de acompanhante
-                enableGuestButton.style.display = 'none'; // Esconder o botão após o clique
+                guestField.disabled = false;
+                enableGuestButton.style.display = 'none';
             });
 
             form.addEventListener('submit', function(e) {
@@ -96,7 +108,7 @@
                 push(ref(database, 'confirmations'), {
                     name: name,
                     guest: guest,
-                    timestamp: serverTimestamp()  // Adiciona o timestamp do servidor
+                    timestamp: serverTimestamp()
                 }).then(() => {
                     window.location.href = 'thank-you.html';
                 }).catch(error => {
