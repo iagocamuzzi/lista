@@ -49,6 +49,7 @@
             font-size: 1rem;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            margin-bottom: 20px;
         }
         button:hover {
             background-color: #2980b9;
@@ -72,11 +73,21 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('confirmationForm');
+            const guestField = document.getElementById('guest');
+            const enableGuestButton = document.getElementById('enableGuestButton');
+
+            guestField.disabled = true; // Campo de acompanhante desabilitado por padrão
+
+            enableGuestButton.addEventListener('click', function() {
+                guestField.disabled = false; // Habilitar o campo de acompanhante
+                enableGuestButton.style.display = 'none'; // Esconder o botão após o clique
+            });
+
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
 
                 const name = document.getElementById('name').value;
-                const guest = document.getElementById('guest').value || 'Nenhum';
+                const guest = guestField.value || 'Nenhum';
 
                 push(ref(database, 'confirmations'), {
                     name: name,
@@ -96,6 +107,8 @@
         <label for="name">Seu Nome:</label>
         <input type="text" id="name" name="name" required>
         
+        <button type="button" id="enableGuestButton">Adicionar Acompanhante</button>
+
         <label for="guest">Nome do Acompanhante (se houver):</label>
         <input type="text" id="guest" name="guest">
 
