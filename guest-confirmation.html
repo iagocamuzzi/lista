@@ -57,18 +57,21 @@
         }
     </style>
     <script type="module">
+        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
         import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-database.js";
 
+        // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "API_KEY",
-            authDomain: "AUTH_DOMAIN",
-            projectId: "PROJECT_ID",
-            storageBucket: "STORAGE_BUCKET",
-            messagingSenderId: "SENDER_ID",
-            appId: "APP_ID"
+            apiKey: "AIzaSyBVauuiyVT2bPoVpM5QtDAd2XNN9-4FQeI",
+            authDomain: "listaconfirmacao-da672.firebaseapp.com",
+            projectId: "listaconfirmacao-da672",
+            storageBucket: "listaconfirmacao-da672.appspot.com",
+            messagingSenderId: "289041048573",
+            appId: "1:289041048573:web:83f4bf7ae29aa1eee3ef94"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
@@ -77,11 +80,11 @@
             const guestField = document.getElementById('guest');
             const enableGuestButton = document.getElementById('enableGuestButton');
 
-            guestField.disabled = true;
+            guestField.disabled = true; // Campo de acompanhante desabilitado por padrão
 
             enableGuestButton.addEventListener('click', function() {
-                guestField.disabled = false;
-                enableGuestButton.style.display = 'none';
+                guestField.disabled = false; // Habilitar o campo de acompanhante
+                enableGuestButton.style.display = 'none'; // Esconder o botão após o clique
             });
 
             form.addEventListener('submit', function(e) {
