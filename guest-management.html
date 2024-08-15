@@ -186,10 +186,19 @@
         window.sendListToWhatsApp = function() {
             const phoneNumber = "+5527997715210";
             let guestArray = [];
-            document.querySelectorAll('#confirmationList tr').forEach((row, index) => {
+            let index = 1;
+
+            document.querySelectorAll('#confirmationList tr').forEach((row) => {
                 const name = row.querySelector('input[data-field="name"]').value.trim().toUpperCase();
+                const guest = row.querySelector('input[data-field="guest"]').value.trim().toUpperCase();
+
                 if (name) {
-                    guestArray.push(`${index + 1} - ${name}`);
+                    guestArray.push(`${index} - ${name}`);
+                    index++;
+                }
+                if (guest && guest !== 'NENHUM') {
+                    guestArray.push(`${index} - ${guest}`);
+                    index++;
                 }
             });
 
