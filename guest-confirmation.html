@@ -52,6 +52,7 @@
             font-size: 1rem;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            margin-bottom: 10px;
         }
         button:hover {
             background-color: #2980b9;
@@ -96,8 +97,8 @@
             const enableGuestButton = document.getElementById('enableGuestButton');
 
             enableGuestButton.addEventListener('click', function() {
-                guestSection.style.display = 'block'; // Mostrar o campo de acompanhante
-                enableGuestButton.style.display = 'none'; // Esconder o botão após o clique
+                guestSection.style.display = 'block';
+                enableGuestButton.style.display = 'none';
             });
 
             form.addEventListener('submit', function(e) {
@@ -124,7 +125,7 @@
     <form id="confirmationForm">
         <label for="name">Seu Nome:</label>
         <input type="text" id="name" name="name" required>
-        
+
         <button type="button" id="enableGuestButton">Adicionar Acompanhante</button>
 
         <div id="guestSection">
