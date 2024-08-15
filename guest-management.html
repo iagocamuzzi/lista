@@ -54,6 +54,20 @@
             border-radius: 5px;
             text-transform: uppercase;
         }
+        #print-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        #print-button:hover {
+            background-color: #2980b9;
+        }
     </style>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
@@ -87,9 +101,9 @@
                         ? `${String(timestamp.getDate()).padStart(2, '0')}/${String(timestamp.getMonth() + 1).padStart(2, '0')} - ${String(timestamp.getHours()).padStart(2, '0')}:${String(timestamp.getMinutes()).padStart(2, '0')}` 
                         : 'Data Inválida';
 
-                    totalPeople++; // Contar o convidado principal
+                    totalPeople++;
                     if (data.guest && data.guest.toUpperCase() !== 'NENHUM') {
-                        totalPeople++; // Contar o acompanhante se houver
+                        totalPeople++;
                     }
 
                     const row = document.createElement('tr');
@@ -101,10 +115,12 @@
                     confirmationList.appendChild(row);
                 });
 
-                // Atualizar o total de pessoas confirmadas
                 totalElement.innerHTML = `Total de Pessoas Confirmadas: ${totalPeople}`;
 
-                // Adicionar evento para salvamento automático ao perder o foco
+                document.getElementById('print-button').addEventListener('click', function() {
+                    window.print(); // Imprime a página
+                });
+
                 document.querySelectorAll('input[type="text"]').forEach(input => {
                     input.addEventListener('blur', function() {
                         const key = this.getAttribute('data-key');
@@ -118,7 +134,7 @@
                             if (siblingInput && siblingInput.value.trim() === '') {
                                 remove(ref(database, `confirmations/${key}`)).then(() => {
                                     console.log(`Registro ${key} excluído.`);
-                                    this.closest('tr').remove(); // Remove a linha da tabela
+                                    this.closest('tr').remove();
                                     totalElement.innerHTML = `Total de Pessoas Confirmadas: ${--totalPeople}`;
                                 }).catch(error => {
                                     console.error("Erro ao excluir: ", error);
@@ -143,6 +159,7 @@
 <body>
     <h1>Gerenciamento de Convidados</h1>
     <div id="total">Carregando...</div>
+    <button id="print-button">Imprimir Lista</button>
     <table>
         <thead>
             <tr>
