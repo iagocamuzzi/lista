@@ -21,7 +21,22 @@
         #total {
             text-align: center;
             font-size: 1.2rem;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+        }
+        button#printBtn {
+            display: block;
+            margin: 0 auto 20px auto;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button#printBtn:hover {
+            background-color: #2980b9;
         }
         table {
             width: 100%;
@@ -53,20 +68,6 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             text-transform: uppercase;
-        }
-        #print-button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-        #print-button:hover {
-            background-color: #2980b9;
         }
     </style>
     <script type="module">
@@ -101,9 +102,9 @@
                         ? `${String(timestamp.getDate()).padStart(2, '0')}/${String(timestamp.getMonth() + 1).padStart(2, '0')} - ${String(timestamp.getHours()).padStart(2, '0')}:${String(timestamp.getMinutes()).padStart(2, '0')}` 
                         : 'Data Inválida';
 
-                    totalPeople++;
+                    totalPeople++; // Contar o convidado principal
                     if (data.guest && data.guest.toUpperCase() !== 'NENHUM') {
-                        totalPeople++;
+                        totalPeople++; // Contar o acompanhante se houver
                     }
 
                     const row = document.createElement('tr');
@@ -115,12 +116,10 @@
                     confirmationList.appendChild(row);
                 });
 
+                // Atualizar o total de pessoas confirmadas
                 totalElement.innerHTML = `Total de Pessoas Confirmadas: ${totalPeople}`;
 
-                document.getElementById('print-button').addEventListener('click', function() {
-                    window.print(); // Imprime a página
-                });
-
+                // Adicionar evento para salvamento automático ao perder o foco
                 document.querySelectorAll('input[type="text"]').forEach(input => {
                     input.addEventListener('blur', function() {
                         const key = this.getAttribute('data-key');
@@ -134,7 +133,7 @@
                             if (siblingInput && siblingInput.value.trim() === '') {
                                 remove(ref(database, `confirmations/${key}`)).then(() => {
                                     console.log(`Registro ${key} excluído.`);
-                                    this.closest('tr').remove();
+                                    this.closest('tr').remove(); // Remove a linha da tabela
                                     totalElement.innerHTML = `Total de Pessoas Confirmadas: ${--totalPeople}`;
                                 }).catch(error => {
                                     console.error("Erro ao excluir: ", error);
@@ -154,12 +153,16 @@
                 });
             });
         });
+
+        function printList() {
+            window.print();
+        }
     </script>
 </head>
 <body>
     <h1>Gerenciamento de Convidados</h1>
     <div id="total">Carregando...</div>
-    <button id="print-button">Imprimir Lista</button>
+    <button id="printBtn" onclick="printList()">Imprimir Lista de Convidados</button>
     <table>
         <thead>
             <tr>
