@@ -109,19 +109,16 @@
             const confirmationList = document.getElementById('confirmationList');
             const totalElement = document.getElementById('total');
             let totalPeople = 0;
-            let guestArray = [];
 
             onValue(ref(database, 'confirmations'), (snapshot) => {
                 confirmationList.innerHTML = '';
                 totalPeople = 0;
-                guestArray = [];
 
                 snapshot.forEach((childSnapshot) => {
                     const data = childSnapshot.val();
-                    totalPeople++;
-
+                    const key = childSnapshot.key;
                     const name = data.name.toUpperCase();
-                    guestArray.push(name);
+                    const guest = data.guest.toUpperCase();
 
                     const timestamp = data.timestamp ? new Date(data.timestamp) : null;
                     const formattedDate = timestamp 
@@ -130,28 +127,65 @@
 
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td><input type="text" value="${name}" data-key="${childSnapshot.key}" data-field="name"></td>
-                        <td><input type="text" value="${data.guest}" data-key="${childSnapshot.key}" data-field="guest"></td>
+                        <td><input type="text" value="${name}" data-key="${key}" data-field="name"></td>
+                        <td><input type="text" value="${guest}" data-key="${key}" data-field="guest"></td>
                         <td>${formattedDate}</td>
                     `;
                     confirmationList.appendChild(row);
                 });
 
                 totalElement.innerHTML = `Total de Pessoas Confirmadas: ${totalPeople}`;
+
+                document.querySelectorAll('input[type="text"]').forEach(input => {
+                    input.addEventListener('blur', function() {
+                        const key = this.getAttribute('data-key');
+                        const field = this.getAttribute('data-field');
+                        const value = this.value.trim().toUpperCase();
+
+                        if (value === '') {
+                            const siblingField = field === 'name' ? 'guest' : 'name';
+                            const siblingInput = document.querySelector(`input[data-key="${key}"][data-field="${siblingField}"]`);
+
+                            if (siblingInput && siblingInput.value.trim() === '') {
+                                remove(ref(database, `confirmations/${key}`)).then(() => {
+                                    this.closest('tr').remove(); // Remove a linha da tabela
+                                }).catch(error => {
+                                    console.error("Erro ao excluir: ", error);
+                                });
+                            }
+                        } else {
+                            const updates = {};
+                            updates[`confirmations/${key}/${field}`] = value;
+
+                            update(ref(database), updates).then(() => {
+                                console.log(`${field} atualizado para ${value}`);
+                            }).catch(error => {
+                                console.error("Erro ao atualizar: ", error);
+                            });
+                        }
+                    });
+                });
             });
-
-            window.sendListToWhatsApp = function() {
-                const phoneNumber = "+5527997715210";
-                let message = `*CONFIRMAÇÃO - SITE*%0A%0A` + guestArray.map((name, index) => `${index + 1} - ${name}`).join('%0A');
-
-                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-                window.open(whatsappUrl, '_blank');
-            };
         });
 
         window.printList = function() {
             window.print();
-        }
+        };
+
+        window.sendListToWhatsApp = function() {
+            const phoneNumber = "+5527997715210";
+            let guestArray = [];
+            document.querySelectorAll('#confirmationList tr').forEach((row, index) => {
+                const name = row.querySelector('input[data-field="name"]').value.trim().toUpperCase();
+                if (name) {
+                    guestArray.push(`${index + 1} - ${name}`);
+                }
+            });
+
+            const message = `*CONFIRMAÇÃO - SITE*%0A%0A${guestArray.join('%0A')}`;
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+            window.open(whatsappUrl, '_blank');
+        };
     </script>
 </body>
 </html>
