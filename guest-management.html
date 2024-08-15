@@ -52,7 +52,7 @@
     </style>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
-        import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-database.js";
+        import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBVauuiyVT2bPoVpM5QtDAd2XNN9-4FQeI",
@@ -94,16 +94,32 @@
                     input.addEventListener('blur', function() {
                         const key = this.getAttribute('data-key');
                         const field = this.getAttribute('data-field');
-                        const value = this.value.toUpperCase(); // Garantir que o valor seja salvo em maiúsculas
+                        const value = this.value.trim().toUpperCase();
 
-                        const updates = {};
-                        updates[`confirmations/${key}/${field}`] = value;
+                        if (value === '') {
+                            // Se ambos os campos (nome e acompanhante) estiverem vazios, exclui o registro
+                            const siblingField = field === 'name' ? 'guest' : 'name';
+                            const siblingInput = document.querySelector(`input[data-key="${key}"][data-field="${siblingField}"]`);
 
-                        update(ref(database), updates).then(() => {
-                            console.log(`${field} atualizado para ${value}`);
-                        }).catch(error => {
-                            console.error("Erro ao atualizar: ", error);
-                        });
+                            if (siblingInput && siblingInput.value.trim() === '') {
+                                remove(ref(database, `confirmations/${key}`)).then(() => {
+                                    console.log(`Registro ${key} excluído.`);
+                                    this.closest('tr').remove(); // Remove a linha da tabela
+                                }).catch(error => {
+                                    console.error("Erro ao excluir: ", error);
+                                });
+                            }
+                        } else {
+                            // Caso contrário, atualiza o campo
+                            const updates = {};
+                            updates[`confirmations/${key}/${field}`] = value;
+
+                            update(ref(database), updates).then(() => {
+                                console.log(`${field} atualizado para ${value}`);
+                            }).catch(error => {
+                                console.error("Erro ao atualizar: ", error);
+                            });
+                        }
                     });
                 });
             });
