@@ -66,9 +66,17 @@
             const startDate = '20241012T123000';
             const endDate = '20241012T153000'; // Supondo que o evento dure 3 horas
 
-            const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}&sf=true&output=xml`;
+            const isApple = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-            window.open(calendarUrl, '_blank');
+            if (isApple) {
+                // iOS/Apple Calendar
+                const appleCalendarUrl = `data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0AURL:${document.URL}%0ADTSTART:${startDate}%0ADTEND:${endDate}%0ASUMMARY:${title}%0ADESCRIPTION:${details}%0ALOCATION:${location}%0AEND:VEVENT%0AEND:VCALENDAR`;
+                window.open(appleCalendarUrl, '_blank');
+            } else {
+                // Google Calendar
+                const googleCalendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}&sf=true&output=xml`;
+                window.open(googleCalendarUrl, '_blank');
+            }
         }
     </script>
 </body>
