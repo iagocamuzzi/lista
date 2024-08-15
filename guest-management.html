@@ -125,6 +125,9 @@
                     const guest = data.guest.toUpperCase();
 
                     totalPeople++; // Contar a pessoa principal
+                    if (guest && guest !== 'NENHUM') {
+                        totalPeople++; // Contar o acompanhante se houver
+                    }
 
                     const timestamp = data.timestamp ? new Date(data.timestamp) : null;
                     const formattedDate = timestamp 
@@ -155,7 +158,7 @@
                             if (siblingInput && siblingInput.value.trim() === '') {
                                 remove(ref(database, `confirmations/${key}`)).then(() => {
                                     this.closest('tr').remove(); // Remove a linha da tabela
-                                    totalPeople--; // Atualizar o total de pessoas
+                                    totalPeople -= siblingField === 'name' && guest !== 'NENHUM' ? 2 : 1;
                                     updateTotalPeople(totalPeople); // Atualizar a exibição do total
                                 }).catch(error => {
                                     console.error("Erro ao excluir: ", error);
