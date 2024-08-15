@@ -47,6 +47,7 @@
             font-size: 1rem;
             border: 1px solid #ccc;
             border-radius: 5px;
+            text-transform: uppercase; /* Forçar texto em maiúsculas */
         }
     </style>
     <script type="module">
@@ -72,12 +73,15 @@
                 confirmationList.innerHTML = '';
                 snapshot.forEach((childSnapshot) => {
                     const data = childSnapshot.val();
+                    const timestamp = data.timestamp ? new Date(data.timestamp) : null;
+                    const formattedDate = timestamp ? timestamp.toLocaleString() : 'Data Inválida';
+
                     const row = document.createElement('tr');
 
                     row.innerHTML = `
-                        <td><input type="text" value="${data.name}" data-key="${childSnapshot.key}" data-field="name"></td>
-                        <td><input type="text" value="${data.guest}" data-key="${childSnapshot.key}" data-field="guest"></td>
-                        <td>${new Date(data.timestamp).toLocaleString()}</td>
+                        <td><input type="text" value="${data.name}" data-key="${childSnapshot.key}" data-field="name" style="text-transform: uppercase;"></td>
+                        <td><input type="text" value="${data.guest}" data-key="${childSnapshot.key}" data-field="guest" style="text-transform: uppercase;"></td>
+                        <td>${formattedDate}</td>
                     `;
 
                     confirmationList.appendChild(row);
@@ -88,7 +92,7 @@
                     input.addEventListener('blur', function() {
                         const key = this.getAttribute('data-key');
                         const field = this.getAttribute('data-field');
-                        const value = this.value;
+                        const value = this.value.toUpperCase(); // Garantir que o valor seja salvo em maiúsculas
 
                         const updates = {};
                         updates[`confirmations/${key}/${field}`] = value;
