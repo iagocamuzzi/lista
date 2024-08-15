@@ -56,6 +56,9 @@
         button:hover {
             background-color: #2980b9;
         }
+        #guestSection {
+            display: none;
+        }
         @media (max-width: 480px) {
             h1 {
                 font-size: 1.5rem;
@@ -89,21 +92,19 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('confirmationForm');
-            const guestField = document.getElementById('guest');
+            const guestSection = document.getElementById('guestSection');
             const enableGuestButton = document.getElementById('enableGuestButton');
 
-            guestField.disabled = true;
-
             enableGuestButton.addEventListener('click', function() {
-                guestField.disabled = false;
-                enableGuestButton.style.display = 'none';
+                guestSection.style.display = 'block'; // Mostrar o campo de acompanhante
+                enableGuestButton.style.display = 'none'; // Esconder o botão após o clique
             });
 
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
 
                 const name = document.getElementById('name').value;
-                const guest = guestField.value || 'Nenhum';
+                const guest = document.getElementById('guest').value || 'Nenhum';
 
                 push(ref(database, 'confirmations'), {
                     name: name,
@@ -126,8 +127,10 @@
         
         <button type="button" id="enableGuestButton">Adicionar Acompanhante</button>
 
-        <label for="guest">Nome do Acompanhante (se houver):</label>
-        <input type="text" id="guest" name="guest">
+        <div id="guestSection">
+            <label for="guest">Nome do Acompanhante (se houver):</label>
+            <input type="text" id="guest" name="guest">
+        </div>
 
         <button type="submit">Confirmar Presença</button>
     </form>
