@@ -30,6 +30,20 @@
         .event-info p {
             margin: 5px 0;
         }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 <body>
@@ -37,8 +51,25 @@
     <p>Estamos ansiosos para te ver no aniversário!</p>
 
     <div class="event-info">
+        <p><strong>Data:</strong> 12/10/2024</p>
         <p><strong>Local:</strong> Rua Estrela Dalva - 314 - Alvorada - Vila Velha/ES</p>
         <p><strong>Horário:</strong> 12:30h</p>
     </div>
+
+    <button onclick="addToCalendar()">Adicionar ao Calendário</button>
+
+    <script>
+        function addToCalendar() {
+            const title = encodeURIComponent('Aniversário');
+            const location = encodeURIComponent('Rua Estrela Dalva - 314 - Alvorada - Vila Velha/ES');
+            const details = encodeURIComponent('Aniversário em 12/10/2024 às 12:30h');
+            const startDate = '20241012T123000';
+            const endDate = '20241012T153000'; // Supondo que o evento dure 3 horas
+
+            const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}&sf=true&output=xml`;
+
+            window.open(calendarUrl, '_blank');
+        }
+    </script>
 </body>
 </html>
