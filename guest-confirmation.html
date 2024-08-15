@@ -39,7 +39,7 @@
             border-radius: 5px;
             border: 1px solid #ccc;
             font-size: 1rem;
-            text-transform: uppercase; /* Transformar texto em maiúsculas */
+            text-transform: uppercase;
         }
         button {
             background-color: #3498db;
@@ -58,7 +58,7 @@
     </style>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
-        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-database.js";
+        import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBVauuiyVT2bPoVpM5QtDAd2XNN9-4FQeI",
@@ -77,11 +77,11 @@
             const guestField = document.getElementById('guest');
             const enableGuestButton = document.getElementById('enableGuestButton');
 
-            guestField.disabled = true; // Campo de acompanhante desabilitado por padrão
+            guestField.disabled = true;
 
             enableGuestButton.addEventListener('click', function() {
-                guestField.disabled = false; // Habilitar o campo de acompanhante
-                enableGuestButton.style.display = 'none'; // Esconder o botão após o clique
+                guestField.disabled = false;
+                enableGuestButton.style.display = 'none';
             });
 
             form.addEventListener('submit', function(e) {
@@ -92,7 +92,8 @@
 
                 push(ref(database, 'confirmations'), {
                     name: name,
-                    guest: guest
+                    guest: guest,
+                    timestamp: serverTimestamp()  // Adiciona o timestamp do servidor
                 }).then(() => {
                     window.location.href = 'thank-you.html';
                 }).catch(error => {
