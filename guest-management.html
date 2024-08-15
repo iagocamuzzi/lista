@@ -16,6 +16,11 @@
             color: #2c3e50;
             font-size: 2.5rem;
             text-align: center;
+            margin-bottom: 10px;
+        }
+        #total {
+            text-align: center;
+            font-size: 1.2rem;
             margin-bottom: 30px;
         }
         table {
@@ -68,9 +73,15 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const confirmationList = document.getElementById('confirmationList');
+            const totalElement = document.getElementById('total');
+            let totalGuests = 0;
+            let totalPeople = 0;
 
             onValue(ref(database, 'confirmations'), (snapshot) => {
                 confirmationList.innerHTML = '';
+                totalGuests = 0;
+                totalPeople = 0;
+
                 snapshot.forEach((childSnapshot) => {
                     const data = childSnapshot.val();
                     const timestamp = data.timestamp ? new Date(data.timestamp) : null;
@@ -78,16 +89,23 @@
                         ? `${String(timestamp.getDate()).padStart(2, '0')}/${String(timestamp.getMonth() + 1).padStart(2, '0')} - ${String(timestamp.getHours()).padStart(2, '0')}:${String(timestamp.getMinutes()).padStart(2, '0')}` 
                         : 'Data Inválida';
 
-                    const row = document.createElement('tr');
+                    totalGuests++;
+                    totalPeople++; // Contar o convidado principal
+                    if (data.guest && data.guest.toUpperCase() !== 'NENHUM') {
+                        totalPeople++; // Contar o acompanhante se houver
+                    }
 
+                    const row = document.createElement('tr');
                     row.innerHTML = `
                         <td><input type="text" value="${data.name}" data-key="${childSnapshot.key}" data-field="name"></td>
                         <td><input type="text" value="${data.guest}" data-key="${childSnapshot.key}" data-field="guest"></td>
                         <td>${formattedDate}</td>
                     `;
-
                     confirmationList.appendChild(row);
                 });
+
+                // Atualizar o total de convidados e pessoas
+                totalElement.innerHTML = `Total de Convidados: ${totalGuests} | Total de Pessoas Confirmadas: ${totalPeople}`;
 
                 // Adicionar evento para salvamento automático ao perder o foco
                 document.querySelectorAll('input[type="text"]').forEach(input => {
@@ -97,7 +115,6 @@
                         const value = this.value.trim().toUpperCase();
 
                         if (value === '') {
-                            // Se ambos os campos (nome e acompanhante) estiverem vazios, exclui o registro
                             const siblingField = field === 'name' ? 'guest' : 'name';
                             const siblingInput = document.querySelector(`input[data-key="${key}"][data-field="${siblingField}"]`);
 
@@ -105,12 +122,12 @@
                                 remove(ref(database, `confirmations/${key}`)).then(() => {
                                     console.log(`Registro ${key} excluído.`);
                                     this.closest('tr').remove(); // Remove a linha da tabela
+                                    totalElement.innerHTML = `Total de Convidados: ${--totalGuests} | Total de Pessoas Confirmadas: ${--totalPeople}`;
                                 }).catch(error => {
                                     console.error("Erro ao excluir: ", error);
                                 });
                             }
                         } else {
-                            // Caso contrário, atualiza o campo
                             const updates = {};
                             updates[`confirmations/${key}/${field}`] = value;
 
@@ -128,6 +145,7 @@
 </head>
 <body>
     <h1>Gerenciamento de Convidados</h1>
+    <div id="total">Carregando...</div>
     <table>
         <thead>
             <tr>
