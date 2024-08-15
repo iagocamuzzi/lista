@@ -74,12 +74,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             const confirmationList = document.getElementById('confirmationList');
             const totalElement = document.getElementById('total');
-            let totalGuests = 0;
             let totalPeople = 0;
 
             onValue(ref(database, 'confirmations'), (snapshot) => {
                 confirmationList.innerHTML = '';
-                totalGuests = 0;
                 totalPeople = 0;
 
                 snapshot.forEach((childSnapshot) => {
@@ -89,7 +87,6 @@
                         ? `${String(timestamp.getDate()).padStart(2, '0')}/${String(timestamp.getMonth() + 1).padStart(2, '0')} - ${String(timestamp.getHours()).padStart(2, '0')}:${String(timestamp.getMinutes()).padStart(2, '0')}` 
                         : 'Data Inválida';
 
-                    totalGuests++;
                     totalPeople++; // Contar o convidado principal
                     if (data.guest && data.guest.toUpperCase() !== 'NENHUM') {
                         totalPeople++; // Contar o acompanhante se houver
@@ -104,8 +101,8 @@
                     confirmationList.appendChild(row);
                 });
 
-                // Atualizar o total de convidados e pessoas
-                totalElement.innerHTML = `Total de Convidados: ${totalGuests} | Total de Pessoas Confirmadas: ${totalPeople}`;
+                // Atualizar o total de pessoas confirmadas
+                totalElement.innerHTML = `Total de Pessoas Confirmadas: ${totalPeople}`;
 
                 // Adicionar evento para salvamento automático ao perder o foco
                 document.querySelectorAll('input[type="text"]').forEach(input => {
@@ -122,7 +119,7 @@
                                 remove(ref(database, `confirmations/${key}`)).then(() => {
                                     console.log(`Registro ${key} excluído.`);
                                     this.closest('tr').remove(); // Remove a linha da tabela
-                                    totalElement.innerHTML = `Total de Convidados: ${--totalGuests} | Total de Pessoas Confirmadas: ${--totalPeople}`;
+                                    totalElement.innerHTML = `Total de Pessoas Confirmadas: ${--totalPeople}`;
                                 }).catch(error => {
                                     console.error("Erro ao excluir: ", error);
                                 });
